@@ -1,0 +1,67 @@
+{%extends 'base.html'%}
+{%load static%}
+{% load env_extras %}
+
+{%block body%}
+    <progress id="content-loader" class="htmx-indicator" max="100"></progress>
+
+    <div class="card" style="width:auto">
+        <div class="row mb-1 mt-1">
+            <div class="col">
+            </div>
+            <div class="col-6" id="content_col" style="text-align:center">
+            {% block content %}
+                <div class="row mb-1 mt-1">
+                    <div class="col card" style="text-align:center">
+                        {%if currently_a_rollcall%}
+                        <button hx-get="/rollcall-form" 
+                            hx-push-url="false" hx-target="#content_col"
+                            hx-swap="innerHTML" class="btn btn-primary btn-sm">Rollcall</button>
+                        {%else%}
+                        There is currently no rollcall active
+                        {%if request.user.is_authenticated%}
+                            <button hx-get="/set-up-rollcall" 
+                            hx-push-url="true" hx-target="#content_col"
+                            hx-swap="innerHTML" class="btn btn-primary btn-sm">Set Up Rollcall</button>
+                        {%endif%}
+                        {%endif%}
+                    </div>
+                </div>
+                
+                <div class="row mb-1 mt-1">
+                    <div class="col card" style="text-align:center">
+                        Or
+                    </div>
+                </div>
+                
+                {% if request.user.is_authenticated %}
+                
+                <div class="row mb-1 mt-1">
+                    <div class="col card" style="text-align:center">
+                        You are logged in as {{request.user.username}}
+                    </div>
+                </div>
+                
+                <div class="row mb-1 mt-1">
+                    <div class="col card" style="text-align:center">
+                        <button hx-get="/logout" 
+                        hx-push-url="false" hx-target="#content_col"
+                        hx-swap="innerHTML" class="btn btn-primary btn-sm">Logout</button>
+                    </div>
+                </div>
+                
+                {%else%}
+                <div class="row mb-1 mt-1">
+                    <div class="col card" style="text-align:center">
+                        {%include 'login.html'%}
+                    </div>
+                </div>
+                    
+                {%endif%}
+            {% endblock %}
+            </div>
+            <div class="col">
+            </div>
+        </div>
+    </div>
+{%endblock%}
