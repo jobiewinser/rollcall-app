@@ -7,7 +7,10 @@ urlpatterns = [
     path('', views.LoginView.as_view()),
     # path('login', views.LoginView.as_view(), name='login'),
     path('logout', views.logout_htmx),
-    path('rollcall-form', views.rollcall_form),
-    path('set-up-rollcall', views.set_up_rollcall_form),
+    path('management', views.management_htmx),
+    path('manage-current-rollcall', views.manage_current_roll_call_htmx),
+    path('logout', views.logout_htmx),
+    path('set-up-rollcall', views.RollCallSetUpView.as_view()),
+    path('check-in', views.check_in_htmx),
     
 ]

@@ -1,0 +1,38 @@
+
+{% block content %}
+<div class="row mb-1 mt-1 card">
+    <div class="col">
+        <div class="row">
+            <div class="col" style="text-align:left">
+                <h3>{{current_rollcall}}</h3>
+            </div>
+        </div>
+    </div>
+</div><div class="row mb-1 mt-1 card">
+    <div class="col">
+        <div class="row">
+            <div class="col" style="text-align:left">
+                <h3>Call Ins</h3>
+                <ul>
+                    {%for callin in current_rollcall.checkin_rollcall.all%}
+                    <li>
+                        {{callin}}
+                    </li>
+                    {%endfor%}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mb-1 mt-1 card">
+    <div class="col" style="text-align:left">
+    </div>
+    <div class="col-md-auto" style="text-align:center">
+        <button hx-post="/set-up-rollcall" hx-include=".set_up_rollcall_input"
+        hx-push-url="true" hx-target="#content_col"
+        hx-swap="innerHTML" class="btn btn-primary btn-sm">Set Up Rollcall</button>
+    </div>
+    <div class="col" style="text-align:left">
+    </div>
+</div>
+{%endblock content%}

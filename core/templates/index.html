@@ -11,18 +11,74 @@
             </div>
             <div class="col-6" id="content_col" style="text-align:center">
             {% block content %}
+                <input class="form-control check_in_input" value="{{current_rollcall.pk}}" name="rollcall" id="rollcall_pk" style="display:None"/>
                 <div class="row mb-1 mt-1">
                     <div class="col card" style="text-align:center">
-                        {%if currently_a_rollcall%}
-                        <button hx-get="/rollcall-form" 
-                            hx-push-url="false" hx-target="#content_col"
-                            hx-swap="innerHTML" class="btn btn-primary btn-sm">Rollcall</button>
+                        {%if current_rollcall%}
+                        There is currently a rollcall active. Please fill this form to let us know you're safe.
+                        <div class="row mb-1 mt-1 card">
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col" style="text-align:left">
+                                        <label class="form-check-label" for="person" style="white-space: nowrap;">
+                                            You are you?
+                                        </label>
+                                        <select class="select2 form-control form-select check_in_input" name="person" id="person">
+                                            {%for person in people%}
+                                                <option value="{{person.pk}}">{{person.name}}</option>
+                                            {%endfor%}
+                                            <option selected value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-1 mt-1 card">
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col" style="text-align:left">
+                                        <label class="form-check-label" for="people_with_you" style="white-space: nowrap;">
+                                            Who are you with?
+                                        </label>
+                                        <select class="select2 form-control form-select check_in_input" multiple name="people_with_you[]" id="people_with_you">
+                                            {%for person in people%}
+                                                <option value="{{person.pk}}">{{person.name}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-1 mt-1 card">
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col" style="text-align:left">
+                                        <label class="form-check-label" for="further_details" style="white-space: nowrap;">
+                                            Further Details
+                                        </label>
+                                        <textarea class="form-control check_in_input" name="further_details" id="further_details"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-1 mt-1 card">
+                            <div class="col" style="text-align:left">
+                            </div>
+                            <div class="col-md-auto" style="text-align:center">
+                                <button hx-post="/check-in" hx-include=".check_in_input"
+                                hx-push-url="true" hx-target="#content_col"
+                                hx-swap="innerHTML" class="btn btn-primary btn-sm">Submit Check In</button>
+                            </div>
+                            <div class="col" style="text-align:left">
+                            </div>
+                        </div>
                         {%else%}
                         There is currently no rollcall active
                         {%if request.user.is_authenticated%}
-                            <button hx-get="/set-up-rollcall" 
-                            hx-push-url="true" hx-target="#content_col"
-                            hx-swap="innerHTML" class="btn btn-primary btn-sm">Set Up Rollcall</button>
+                        <button hx-get="/set-up-rollcall" 
+                        hx-push-url="true" hx-target="#content_col"
+                        hx-swap="innerHTML" class="btn btn-primary btn-sm">Set Up Rollcall</button>
                         {%endif%}
                         {%endif%}
                     </div>
@@ -44,6 +100,17 @@
                 
                 <div class="row mb-1 mt-1">
                     <div class="col card" style="text-align:center">
+                        <button 
+                        {%if not current_rollcall%}disabled{%endif%} hx-get="/manage-current-rollcall" 
+                        hx-push-url="true" hx-target="#content_col"
+                        hx-swap="innerHTML" class="btn btn-primary btn-sm">Manage Current Roll Call {{current_rollcall}}</button>
+                    </div>
+                    <div class="col card" style="text-align:center">
+                        <button hx-get="/management" 
+                        hx-push-url="true" hx-target="#content_col"
+                        hx-swap="innerHTML" class="btn btn-primary btn-sm">See Previous Roll Calls</button>
+                    </div>
+                    <div class="col card" style="text-align:center">
                         <button hx-get="/logout" 
                         hx-push-url="false" hx-target="#content_col"
                         hx-swap="innerHTML" class="btn btn-primary btn-sm">Logout</button>
@@ -58,7 +125,7 @@
                 </div>
                     
                 {%endif%}
-            {% endblock %}
+            {% endblock content %}
             </div>
             <div class="col">
             </div>
